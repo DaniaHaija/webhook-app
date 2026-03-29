@@ -23,9 +23,9 @@ services:
       - postgres
       - redis
     environment:
-      DATABASE_URL: postgresql://user:password@postgres:5432/webhook_db
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: webhook_db
@@ -37,7 +37,7 @@ services:
       - postgres
       - redis
     environment:
-      DATABASE_URL: postgresql://user:password@postgres:5432/webhook_db
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     command: node dist/worker.js

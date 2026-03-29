@@ -13,14 +13,14 @@ export type Pipelines=  typeof pipelines.$inferInsert;
 
 export const subscribers = pgTable('subscribers', {
   id: uuid('id').primaryKey().defaultRandom(),
-  pipelineId: uuid('pipeline_id').references(() => pipelines.id),
+  pipelineId: uuid('pipeline_id').references(() => pipelines.id, { onDelete: 'cascade' }),
   targetUrl: text('target_url').notNull(),
 });
 export type Subscribers=  typeof subscribers.$inferInsert;
 
 export const jobs = pgTable('jobs', {
   id: uuid('id').primaryKey().defaultRandom(),
-  pipelineId: uuid('pipeline_id').references(() => pipelines.id),
+  pipelineId: uuid('pipeline_id').references(() => pipelines.id, { onDelete: 'cascade' }),
   payload: jsonb('payload').notNull(),
   status: varchar('status', { length: 20 }).default('pending'), // pending, completed, failed
   result: jsonb('result'),

@@ -71,7 +71,15 @@ Environment Configuration:
 Create a .env file or use the defaults provided in docker-compose.yml.
 
 Bash
-ADMIN_API_KEY=your_secret_key_here
+# Database connection string (Points to the 'postgres' service in Docker)
+DATABASE_URL="postgresql://user:password@postgres:5432/webhook_db"
+
+# Redis configuration for BullMQ (Points to the 'redis' service in Docker)
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# Security key for administrative API access
+ADMIN_API_KEY="dania_super_secret_key_2024"
 Launch the Stack:
 
 Bash

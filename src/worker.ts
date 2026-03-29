@@ -89,10 +89,10 @@ const worker = new Worker('process-webhook', async (job: Job) => {
         output: processedData, 
         deliveryLog: deliveryResults ,
         history: {
-      receivedAt: job.timestamp, // وقت دخولها للطابور (من BullMQ)
-      startedAt: new Date(job.processedOn!).toISOString(), // وقت بدء العامل (Worker)
-      completedAt: new Date().toISOString(), // وقت الانتهاء الآن
-      totalDurationMs: Date.now() - job.timestamp // المدة الإجمالية للرحلة
+      receivedAt: job.timestamp, 
+      startedAt: new Date(job.processedOn!).toISOString(), 
+      completedAt: new Date().toISOString(), 
+      totalDurationMs: Date.now() - job.timestamp 
     },
     metadata: {
       attempt: job.attemptsMade + 1,
@@ -102,6 +102,11 @@ const worker = new Worker('process-webhook', async (job: Job) => {
     } );
 
     console.log(`✅ Job ${jobId} completed successfully.`);
+    return {
+      output: processedData, 
+      deliveryLog: deliveryResults,
+    summary  : `Delivered to ${deliveryResults.filter(r => r.success).length} subscribers`
+    };
 
   } catch (error: any) {
     console.error(`❌ Worker Error [Job ${jobId}]:`, error.message);
@@ -132,21 +137,6 @@ const worker = new Worker('process-webhook', async (job: Job) => {
   concurrency: 5
 });
 
-// أضيفي هذه الأسطر في نهاية الملف
-worker.on('ready', () => {
-  console.log('🚀 Worker connected and ready to pull jobs!');
-});
 
-worker.on('active', (job) => {
-  console.log(`🔥 Job ${job.id} has started processing`);
-});
-
-worker.on('error', (err) => {
-  console.error('❌ Redis connection error in Worker:', err);
-});
-
-worker.on('failed', (job, err) => {
-  console.error(`💀 Job ${job?.id} failed with error: ${err.message}`);
-});
 
 export default worker;
