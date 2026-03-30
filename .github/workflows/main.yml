@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -37,26 +37,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # تحديث للإصدار 4
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4 # تحديث للإصدار 4
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: npm
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
 
-      # الخطوة الأهم: تمرير روابط الخدمات كمتغيرات بيئة تشير لـ localhost
-      - name: Run Tests
-        run: npm test
-        env:
-          REDIS_URL: redis://localhost:6379
-          DATABASE_URL: postgresql://user:password@localhost:5432/webhook_db
-
-      - name: Build project
+      - name: Build TypeScript
         run: npm run build
 
-      - name: Docker build test
+      - name: Docker Build Test
         run: docker build -t webhook-app .

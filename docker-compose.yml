@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # قاعدة بيانات PostgreSQL
   postgres:
     image: postgres:15
     environment:
@@ -10,11 +11,13 @@ services:
     ports:
       - "5432:5432"
 
+  # خادم Redis لإدارة الطوابير
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
 
+  # تطبيق الـ API الأساسي
   app:
     build: .
     command: >
@@ -25,14 +28,15 @@ services:
       - postgres
       - redis
     environment:
-      # نستخدم اسم الخدمة 'postgres' و 'redis' كعنوان للهوست
       DATABASE_URL: ${DATABASE_URL:-postgresql://user:password@postgres:5432/webhook_db}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
-      ADMIN_API_KEY: ${ADMIN_API_KEY:-super-secret-key}
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-dev_secret_key}
 
+  # العامل الخلفي لمعالجة المهام
   worker:
     build: .
+    command: node dist/worker.js
     depends_on:
       - postgres
       - redis
@@ -40,4 +44,3 @@ services:
       DATABASE_URL: ${DATABASE_URL:-postgresql://user:password@postgres:5432/webhook_db}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
-    command: node dist/worker.js
