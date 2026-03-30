@@ -37,16 +37,23 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # تحديث للإصدار 4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # تحديث للإصدار 4
         with:
           node-version: 18
           cache: npm
 
       - name: Install dependencies
         run: npm install
+
+      # الخطوة الأهم: تمرير روابط الخدمات كمتغيرات بيئة تشير لـ localhost
+      - name: Run Tests
+        run: npm test
+        env:
+          REDIS_URL: redis://localhost:6379
+          DATABASE_URL: postgresql://user:password@localhost:5432/webhook_db
 
       - name: Build project
         run: npm run build
