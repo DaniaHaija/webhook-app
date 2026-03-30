@@ -17,6 +17,8 @@ services:
 
   app:
     build: .
+    command: >
+      sh -c "npx drizzle-kit push && node dist/index.js"
     ports:
       - "3000:3000"
     depends_on:
@@ -26,9 +28,6 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: webhook_db
       ADMIN_API_KEY: ${ADMIN_API_KEY}
 
   worker:
